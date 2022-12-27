@@ -16,8 +16,11 @@ Nota: se debe ejecutar primero el yaml y de ultimas los comandos relacionados a 
 
 # 3. Evidencias:
 
-![](assets/kub-1-1.png)
+Ejercicio finalizado con exito:
 ![](assets/kub-1-2.png)
+Evidencias varias 1:
 ![](assets/kub-1-3.png)
+Evidencias varias 2:
 ![](assets/kub-1-4.png)
+Evidencias varias 3:
 ![](assets/kub-1-5.png)
