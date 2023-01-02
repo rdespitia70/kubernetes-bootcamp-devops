@@ -1,0 +1,60 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: data-pvc
+spec:
+   accessModes: ["ReadWriteMany"]
+   resources:
+    requests:
+       storage: 1Gi
+   volumeName: data-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-pv
+spec:
+   accessModes: ["ReadWriteMany"]
+   capacity:
+    storage: 1Gi
+   hostPath:
+      path: /web
+      type: DirectoryOrCreate
+
+
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gop-fs-service
+spec:
+  selector:
+    app: myservice
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+--- 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gop-fileserver
+spec: 
+  containers:
+  - name: gop-fileserver
+    image: kodekloud/fileserver
+    volumeMounts:
+    - mountPath: /web
+      name: data-store
+  volumes:
+  - name: data-store
+    persistentVolumeClaim:
+      claimName: data-pvc
+
