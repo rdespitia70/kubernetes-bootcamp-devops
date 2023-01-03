@@ -23,38 +23,46 @@ spec:
       path: /web
       type: DirectoryOrCreate
 
-
-
 --- 
 
 apiVersion: v1
 kind: Service
 metadata:
+  creationTimestamp: null
+  labels:
+    app: gop-fs-service
   name: gop-fs-service
 spec:
-  selector:
-    app: myservice
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: ClusterIP
+  - name: 8080-8080
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 31200
+  selector:
+    run: gop-fileserver
+  type: NodePort
 
 --- 
 
 apiVersion: v1
 kind: Pod
 metadata:
+  creationTimestamp: null
+  labels:
+    run: gop-fileserver
   name: gop-fileserver
-spec: 
-  containers:
-  - name: gop-fileserver
-    image: kodekloud/fileserver
-    volumeMounts:
-    - mountPath: /web
-      name: data-store
+spec:
   volumes:
   - name: data-store
     persistentVolumeClaim:
       claimName: data-pvc
-
+  containers:
+  - image: kodekloud/fileserver
+    imagePullPolicy: IfNotPresent
+    name: gop-fileserver
+    volumeMounts:
+       - name: data-store
+         mountPath: /web
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
